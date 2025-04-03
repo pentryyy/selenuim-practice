@@ -12,10 +12,10 @@ public class LoginPage {
     private WebDriver     driver;
     private WebDriverWait wait;
 
-    private static final By USERNAME_FIELD = By.id("username");
-    private static final By PASSWORD_FIELD = By.id("password");
-    private static final By LOGIN_BUTTON   = By.cssSelector("[data-test='login-button']");
-    private static final By ERROR_MESSAGE  = By.cssSelector(".header__text__error.ng-scope");
+    private static final By USERNAME_FIELD      = By.id("username");
+    private static final By PASSWORD_FIELD      = By.id("password");
+    private static final By LOGIN_BUTTON        = By.cssSelector("[data-test='login-button']");
+    private static final By LOGIN_ERROR_MESSAGE = By.cssSelector(".header__text__error.ng-scope");
 
     public LoginPage(WebDriver driver) {
         this.driver = driver;
@@ -37,8 +37,8 @@ public class LoginPage {
         driver.findElement(LOGIN_BUTTON).click();
     }
 
-    public boolean isErrorMessageDisplayed() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(ERROR_MESSAGE))
+    public boolean isLoginErrorMessageDisplayed() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(LOGIN_ERROR_MESSAGE))
                    .isDisplayed();
     }
 }

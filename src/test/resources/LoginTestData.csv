@@ -1,0 +1,4 @@
+﻿username;password;expected_result
+volikov_mikhail;2104youtrack;success
+invalid_user;wrong_pass;failure
+Empty ;;failure

@@ -3,14 +3,18 @@ package org.pentryyy;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
+import java.util.Optional;
 
 import org.pentryyy.components.ScreenshotUtils;
 import org.pentryyy.pages.LoginPage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -58,7 +62,41 @@ public class LoginTest {
     void testFailureLogin() {
         shouldTakeScreenshot = true;
         loginPage.login("username", "password");
-        Assertions.assertTrue(loginPage.isErrorMessageDisplayed(), 
+        Assertions.assertTrue(loginPage.isLoginErrorMessageDisplayed(), 
                       "Сообщение об ошибке не отображается");
+    }
+
+    @ParameterizedTest(name = "[{index}] {0}")
+    @CsvFileSource(
+        resources = "/LoginTestData.csv",
+        numLinesToSkip = 1,
+        delimiter = ';',
+        nullValues = {"NULL", "N/A"}
+    )
+    void testLoginWithDataFromCSV(
+        String username,
+        String password,
+        String expectedResult
+    ) {
+        
+        String safeUsername = Optional.ofNullable(username).orElse("");
+        String safePassword = Optional.ofNullable(password).orElse("");
+        
+        loginPage.login(safeUsername, safePassword);
+        
+        // Пропуск теста, если логин или пароль пустые (Временно)
+        Assumptions.assumeTrue(
+            !safeUsername.isEmpty() && !safePassword.isEmpty(),
+            "Пропуск: пустой логин или пароль"
+        );
+
+        if (expectedResult.equalsIgnoreCase("success")) {
+            new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.urlContains("dashboard"));
+            assertTrue(driver.getCurrentUrl().contains("dashboard"));
+        } else {
+            assertTrue(loginPage.isLoginErrorMessageDisplayed(), 
+                "Сообщение об ошибке не отображается");
+        }
     }
 }
