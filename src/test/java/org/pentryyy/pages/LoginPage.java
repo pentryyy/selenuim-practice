@@ -1,4 +1,4 @@
-package org.example.pages;
+package org.pentryyy.pages;
 
 import java.time.Duration;
 

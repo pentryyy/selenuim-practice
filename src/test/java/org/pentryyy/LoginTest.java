@@ -1,14 +1,16 @@
-package org.example;
+package org.pentryyy;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Duration;
 
-import org.example.pages.LoginPage;
+import org.pentryyy.components.ScreenshotUtils;
+import org.pentryyy.pages.LoginPage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -20,6 +22,7 @@ public class LoginTest {
 
     private WebDriver driver;
     private LoginPage loginPage;
+    private boolean   shouldTakeScreenshot; // Флаг для тех тестов где нужен скриншот
 
     @BeforeEach
     void setUp() {
@@ -33,14 +36,18 @@ public class LoginTest {
     }
 
     @AfterEach
-    void tearDown() {
+    void tearDown(TestInfo testInfo) {
         if (driver != null) {
+            if (shouldTakeScreenshot) {
+                ScreenshotUtils.takeScreenshot(driver, testInfo);
+            }
             driver.quit();
         }
     }
 
     @Test
     void testSuccessfulLogin() {
+        shouldTakeScreenshot = false;
         loginPage.login("volikov_mikhail", "2104youtrack");
         new WebDriverWait(driver, Duration.ofSeconds(5))
             .until(ExpectedConditions.urlContains("dashboard"));
@@ -49,6 +56,7 @@ public class LoginTest {
 
     @Test
     void testFailureLogin() {
+        shouldTakeScreenshot = true;
         loginPage.login("username", "password");
         Assertions.assertTrue(loginPage.isErrorMessageDisplayed(), 
                       "Сообщение об ошибке не отображается");
