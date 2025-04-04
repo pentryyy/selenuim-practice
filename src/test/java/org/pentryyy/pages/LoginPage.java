@@ -3,6 +3,7 @@ package org.pentryyy.pages;
 import java.time.Duration;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -40,5 +41,23 @@ public class LoginPage {
     public boolean isLoginErrorMessageDisplayed() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(LOGIN_ERROR_MESSAGE))
                    .isDisplayed();
+    }
+
+    public boolean isPasswordFieldHighlightedRed() {
+        try {
+            wait.until(ExpectedConditions.attributeContains(PASSWORD_FIELD, "class", "ring-input_error"));
+            return true;
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
+
+    public boolean isUsernameFieldHighlightedRed() {
+        try {
+            wait.until(ExpectedConditions.attributeContains(USERNAME_FIELD, "class", "ring-input_error"));
+            return true;
+        } catch (TimeoutException e) {
+            return false;
+        }
     }
 }

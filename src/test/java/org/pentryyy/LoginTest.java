@@ -66,6 +66,23 @@ public class LoginTest {
                       "Сообщение об ошибке не отображается");
     }
 
+    @Test
+    public void testEmptyPasswordValidation() {
+        shouldTakeScreenshot = true;
+        loginPage.login("username", "");
+        Assertions.assertTrue(loginPage.isPasswordFieldHighlightedRed(), 
+                      "Поле пароля должно быть подсвечено красным");
+    }
+
+    @Test
+    public void testEmptyUsernameValidation() {
+        shouldTakeScreenshot = true;
+        loginPage.login("", "valid_password");
+        Assertions.assertTrue(loginPage.isUsernameFieldHighlightedRed(),
+                      "Поле логина должно быть подсвечено красным"
+        );
+    }
+
     @ParameterizedTest(name = "[{index}] {0}")
     @CsvFileSource(
         resources = "/LoginTestData.csv",
