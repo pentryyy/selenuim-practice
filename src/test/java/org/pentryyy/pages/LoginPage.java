@@ -27,7 +27,7 @@ public class LoginPage {
     private WebElement loginErrorMessage;
 
     public LoginPage(WebDriver driver) {
-        this.wait   = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         PageFactory.initElements(driver, this);
     }
 
