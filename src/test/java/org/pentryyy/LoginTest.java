@@ -2,10 +2,10 @@ package org.pentryyy;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.Duration;
 import java.util.Optional;
 
-import org.pentryyy.components.ScreenshotUtils;
+import org.pentryyy.components.custom.driver.CustomChromeWebDriverManager;
+// import org.pentryyy.components.ScreenshotUtils;
 import org.pentryyy.pages.LoginPage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -14,37 +14,22 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class LoginTest {
 
     private WebDriver driver;
     private LoginPage loginPage;
-    private boolean   shouldTakeScreenshot; // Флаг для тех тестов где нужен скриншот
 
     @BeforeEach
     void setUp() {
-        WebDriverManager.chromedriver().setup();
-
-        driver    = new ChromeDriver();
+        driver = CustomChromeWebDriverManager.getDriver("http://193.233.193.42:9091");
         loginPage = new LoginPage(driver);
-
-        driver.manage().window();
-        driver.get("http://193.233.193.42:9091");
     }
 
     @AfterEach
     void tearDown(TestInfo testInfo) {
-        if (driver != null) {
-            if (shouldTakeScreenshot) {
-                ScreenshotUtils.takeScreenshot(driver, testInfo);
-            }
-            driver.quit();
-        }
+        CustomChromeWebDriverManager.quitDriver();
     }
 
     @ParameterizedTest(name = "[{index}] {0}, {1}")
@@ -65,15 +50,15 @@ public class LoginTest {
         
         loginPage.login(safeUsername, safePassword);
         
-        if (expectedResult.equalsIgnoreCase("success")) {
-            shouldTakeScreenshot = false;
-
-            new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.urlContains("dashboard"));
-            assertTrue(driver.getCurrentUrl().contains("dashboard"));
+        if (expectedResult.equalsIgnoreCase("success")) {            
+            CustomChromeWebDriverManager
+                .waitFor(10)    
+                .until(ExpectedConditions.urlContains("/dashboard"));
+            
+            Assertions.assertTrue(CustomChromeWebDriverManager.getCurrentUrl()
+                                                              .contains("dashboard"),
+                          "Пользователь должен перейти в /dashboard");
         } else {
-            shouldTakeScreenshot = true;
-
             if (safePassword.isEmpty()) {
                 Assertions.assertTrue(loginPage.isPasswordFieldHighlightedRed(), 
                               "Поле пароля должно быть подсвечено красным");
