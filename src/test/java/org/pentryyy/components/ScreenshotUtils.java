@@ -19,7 +19,8 @@ public final class ScreenshotUtils {
 
     public static void takeScreenshot(WebDriver driver,TestInfo testInfo) {
         String timestamp = LocalDateTime
-            .now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+            .now()
+            .format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
             
         String filename = String
             .format("%s_%s.png", testInfo.getTestMethod().get().getName(), timestamp);
