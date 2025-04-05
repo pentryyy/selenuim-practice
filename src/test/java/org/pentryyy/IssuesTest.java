@@ -53,4 +53,10 @@ public class IssuesTest {
         Assertions.assertTrue(issuesPage.isSavedSearchListDisplayed(),
                       "Список сохраненных поисков не отображается");
     }
+    
+    @Test
+    void testAddNewTask() {
+        Assertions.assertTrue(issuesPage.isNewTaskAdded(),
+                      "Новая задача не добавлена");
+    }
 }

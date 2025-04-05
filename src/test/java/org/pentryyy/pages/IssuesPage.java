@@ -1,6 +1,8 @@
 package org.pentryyy.pages;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -50,6 +52,22 @@ public class IssuesPage {
     @FindBy(css = "section[data-test='saved-searches-section']")
     private WebElement savedSearchList;
 
+    // ------------------------- Данны для теста по добавлению новой задачи --------------------
+    @FindBy(xpath = "//*[@id=\"top-bar-right-section-primary-portal\"]/div/a")
+    private WebElement newTaskButton;
+
+    @FindBy(css = "textarea[data-test='summary']")
+    private WebElement textarea;
+
+    @FindBy(css = "div[data-test='wysiwyg-editor-content']")
+    private WebElement editor;
+
+    @FindBy(css = "button[data-test='submit-button']")
+    private WebElement submitButton;
+
+    @FindBy(css = "div.firstColumn__d993")
+    private WebElement mainInfoAboutTask;
+
     public IssuesPage(WebDriver driver) {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         PageFactory.initElements(driver, this);
@@ -89,6 +107,29 @@ public class IssuesPage {
         try {
             wait.until(ExpectedConditions.elementToBeClickable(savedSearch)).click();
             wait.until(ExpectedConditions.visibilityOf(savedSearchList));
+            return true;
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
+
+    public boolean isNewTaskAdded() {
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(newTaskButton)).click();
+            
+            String timestamp = LocalDateTime
+                .now()
+                .format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));   
+
+            String heading     = "Тестовый заголовок " + timestamp; 
+            String description = "Тестовое описание "  + timestamp;     
+
+            wait.until(ExpectedConditions.elementToBeClickable(textarea)).sendKeys(heading);
+            wait.until(ExpectedConditions.elementToBeClickable(editor)).sendKeys(description);
+            wait.until(ExpectedConditions.elementToBeClickable(submitButton)).click();
+            
+            wait.until(ExpectedConditions.visibilityOf(mainInfoAboutTask));
+
             return true;
         } catch (TimeoutException e) {
             return false;
