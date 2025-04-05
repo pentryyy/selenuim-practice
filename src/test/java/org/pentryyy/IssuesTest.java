@@ -19,7 +19,7 @@ public class IssuesTest {
     private LoginPage  loginPage;
     private IssuesPage issuesPage;
 
-    private  AtomicBoolean shouldTakeScreenshot = new AtomicBoolean();
+    private AtomicBoolean shouldTakeScreenshot = new AtomicBoolean();
 
     @BeforeEach
     void setUp() {
@@ -41,22 +41,38 @@ public class IssuesTest {
 
     @Test
     void testUserInterfaceLoaded() {
-        Assertions.assertTrue(issuesPage.isDraftListDisplayed(),
-                      "Список черновиков не отображается");
+        try {
 
-        Assertions.assertTrue(issuesPage.isProjectListDisplayed(),
-                      "Список проектов не отображается");
+            Assertions.assertTrue(issuesPage.isDraftListDisplayed(),
+                        "Список черновиков не отображается");
 
-        Assertions.assertTrue(issuesPage.isTagListDisplayed(),
-                      "Список тегов не отображается");
+            Assertions.assertTrue(issuesPage.isProjectListDisplayed(),
+                        "Список проектов не отображается");
 
-        Assertions.assertTrue(issuesPage.isSavedSearchListDisplayed(),
-                      "Список сохраненных поисков не отображается");
+            Assertions.assertTrue(issuesPage.isTagListDisplayed(),
+                        "Список тегов не отображается");
+
+            Assertions.assertTrue(issuesPage.isSavedSearchListDisplayed(),
+                        "Список сохраненных поисков не отображается");
+                
+            shouldTakeScreenshot.set(false);
+        } catch (Throwable e) {
+            shouldTakeScreenshot.set(true);
+            throw e;
+        }
     }
     
     @Test
     void testAddNewTask() {
-        Assertions.assertTrue(issuesPage.isNewTaskAdded(),
-                      "Новая задача не добавлена");
+        try {
+
+            Assertions.assertTrue(issuesPage.isNewTaskAdded(),
+                        "Новая задача не добавлена");
+            
+            shouldTakeScreenshot.set(false);
+        } catch (Throwable e) {
+            shouldTakeScreenshot.set(true);
+            throw e;
+        }
     }
 }

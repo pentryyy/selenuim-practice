@@ -22,7 +22,7 @@ public class LoginTest {
     private WebDriver driver;
     private LoginPage loginPage;
 
-    private  AtomicBoolean shouldTakeScreenshot = new AtomicBoolean();
+    private AtomicBoolean shouldTakeScreenshot = new AtomicBoolean();
 
     @BeforeEach
     void setUp() {
@@ -50,39 +50,39 @@ public class LoginTest {
         String password,
         String expectedResult
     ) {
-        
-        String safeUsername = Optional.ofNullable(username).orElse("");
-        String safePassword = Optional.ofNullable(password).orElse("");
-        
-        loginPage.login(safeUsername, safePassword);
-        
-        if (expectedResult.equalsIgnoreCase("success")) {            
-            shouldTakeScreenshot.set(false);
+        try {
 
-            CustomChromeWebDriverManager
-                .waitFor(10)    
-                .until(ExpectedConditions.urlContains("/dashboard"));
+            String safeUsername = Optional.ofNullable(username).orElse("");
+            String safePassword = Optional.ofNullable(password).orElse("");
             
-            Assertions.assertTrue(CustomChromeWebDriverManager.getCurrentUrl()
-                                                              .contains("dashboard"),
-                          "Пользователь должен перейти в /dashboard");
-        } else {
-            if (safePassword.isEmpty()) {
-                shouldTakeScreenshot.set(true);
+            loginPage.login(safeUsername, safePassword);
+            
+            if (expectedResult.equalsIgnoreCase("success")) {            
 
-                Assertions.assertTrue(loginPage.isPasswordFieldHighlightedRed(), 
-                              "Поле пароля должно быть подсвечено красным");
-            } else if (safeUsername.isEmpty()) {
-                shouldTakeScreenshot.set(true);
-
-                Assertions.assertTrue(loginPage.isUsernameFieldHighlightedRed(),
-                              "Поле логина должно быть подсвечено красным");
-            } else {
-                shouldTakeScreenshot.set(true);
+                CustomChromeWebDriverManager
+                    .waitFor(10)    
+                    .until(ExpectedConditions.urlContains("/dashboard"));
                 
-                assertTrue(loginPage.isLoginErrorMessageDisplayed(), 
-                   "Сообщение об ошибке не отображается");
+                Assertions.assertTrue(CustomChromeWebDriverManager.getCurrentUrl()
+                                                                .contains("dashboard"),
+                            "Пользователь должен перейти в /dashboard");
+            } else {
+                if (safePassword.isEmpty()) {
+                    Assertions.assertTrue(loginPage.isPasswordFieldHighlightedRed(), 
+                                "Поле пароля должно быть подсвечено красным");
+                } else if (safeUsername.isEmpty()) {
+                    Assertions.assertTrue(loginPage.isUsernameFieldHighlightedRed(),
+                                "Поле логина должно быть подсвечено красным");
+                } else {
+                    assertTrue(loginPage.isLoginErrorMessageDisplayed(), 
+                    "Сообщение об ошибке не отображается");
+                }
             }
+
+            shouldTakeScreenshot.set(false);
+        } catch (Throwable e) {
+            shouldTakeScreenshot.set(true);
+            throw e;
         }
     }
 }

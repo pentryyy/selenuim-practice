@@ -19,7 +19,7 @@ public class DashboardTest {
     private LoginPage     loginPage;
     private DashboardPage dashboardPage;
 
-    private  AtomicBoolean shouldTakeScreenshot = new AtomicBoolean();
+    private AtomicBoolean shouldTakeScreenshot = new AtomicBoolean();
 
     @BeforeEach
     void setUp() {
@@ -41,9 +41,18 @@ public class DashboardTest {
 
     @Test
     void testUserInterfaceLoaded() {
-        Assertions.assertTrue(dashboardPage.isIssueListDisplayed(),
-                      "Список ошибок не отображаются");
-        Assertions.assertTrue(dashboardPage.isQuickNotesDisplayed(),
-                      "Заметки не отображаются");
+        try {
+            
+            Assertions.assertTrue(dashboardPage.isIssueListDisplayed(),
+                        "Список ошибок не отображаются");
+
+            Assertions.assertTrue(dashboardPage.isQuickNotesDisplayed(),
+                        "Заметки не отображаются");
+
+            shouldTakeScreenshot.set(false);
+        } catch (Throwable e) {
+            shouldTakeScreenshot.set(true);
+            throw e;
+        }
     }
 }
