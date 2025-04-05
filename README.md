@@ -7,3 +7,19 @@
 ```
 mvn test -Dtest=LoginTest
 ```
+
+## Страница Issues 
+
+Запуск тест-сьюта
+
+```
+mvn test -Dtest=IssuesTest
+```
+
+## Страница Dashboard
+
+Запуск тест-сьюта
+
+```
+mvn test -Dtest=DashboardTest
+```
