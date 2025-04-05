@@ -1,7 +1,5 @@
 package org.pentryyy;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -63,19 +61,26 @@ public class LoginTest {
                     .waitFor(10)    
                     .until(ExpectedConditions.urlContains("/dashboard"));
                 
-                Assertions.assertTrue(CustomChromeWebDriverManager.getCurrentUrl()
-                                                                .contains("dashboard"),
-                            "Пользователь должен перейти в /dashboard");
+                Assertions.assertTrue(
+                    CustomChromeWebDriverManager.getCurrentUrl().contains("dashboard"),
+            "Пользователь должен перейти в /dashboard");
+
             } else {
                 if (safePassword.isEmpty()) {
+
                     Assertions.assertTrue(loginPage.isPasswordFieldHighlightedRed(), 
-                                "Поле пароля должно быть подсвечено красным");
+                                  "Поле пароля должно быть подсвечено красным");
+
                 } else if (safeUsername.isEmpty()) {
+
                     Assertions.assertTrue(loginPage.isUsernameFieldHighlightedRed(),
-                                "Поле логина должно быть подсвечено красным");
+                                  "Поле логина должно быть подсвечено красным");
+
                 } else {
-                    assertTrue(loginPage.isLoginErrorMessageDisplayed(), 
-                    "Сообщение об ошибке не отображается");
+
+                    Assertions.assertTrue(loginPage.isLoginErrorMessageDisplayed(), 
+                                  "Сообщение об ошибке не отображается");
+
                 }
             }
 

@@ -93,6 +93,9 @@
           <parallel>methods</parallel>
           <useUnlimitedThreads>true</useUnlimitedThreads>
           <threadCount>4</threadCount>
+          <systemPropertyVariables>
+            <search.query>${search.query}</search.query>
+          </systemPropertyVariables>
         </configuration>
       </plugin>
     </plugins>

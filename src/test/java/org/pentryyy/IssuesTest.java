@@ -44,16 +44,16 @@ public class IssuesTest {
         try {
 
             Assertions.assertTrue(issuesPage.isDraftListDisplayed(),
-                        "Список черновиков не отображается");
+                          "Список черновиков не отображается");
 
             Assertions.assertTrue(issuesPage.isProjectListDisplayed(),
-                        "Список проектов не отображается");
+                          "Список проектов не отображается");
 
             Assertions.assertTrue(issuesPage.isTagListDisplayed(),
-                        "Список тегов не отображается");
+                          "Список тегов не отображается");
 
             Assertions.assertTrue(issuesPage.isSavedSearchListDisplayed(),
-                        "Список сохраненных поисков не отображается");
+                          "Список сохраненных поисков не отображается");
                 
             shouldTakeScreenshot.set(false);
         } catch (Throwable e) {
@@ -67,7 +67,24 @@ public class IssuesTest {
         try {
 
             Assertions.assertTrue(issuesPage.isNewTaskAdded(),
-                        "Новая задача не добавлена");
+                          "Новая задача не добавлена");
+            
+            shouldTakeScreenshot.set(false);
+        } catch (Throwable e) {
+            shouldTakeScreenshot.set(true);
+            throw e;
+        }
+    }
+
+    @Test
+    void testFindTask() {
+        try {
+
+            String searchQuery = System
+                .getProperty("search.query", "Тестовый заголовок 20250406_005617");
+
+            Assertions.assertTrue(issuesPage.isTaskFinded(searchQuery),
+                          "Существующая задача не найдена");
             
             shouldTakeScreenshot.set(false);
         } catch (Throwable e) {

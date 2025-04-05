@@ -3,7 +3,9 @@ package org.pentryyy.pages;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -52,7 +54,7 @@ public class IssuesPage {
     @FindBy(css = "section[data-test='saved-searches-section']")
     private WebElement savedSearchList;
 
-    // ------------------------- Данны для теста по добавлению новой задачи --------------------
+    // ----------------------- Данные для теста по добавлению новой задачи --------------------
     @FindBy(xpath = "//*[@id=\"top-bar-right-section-primary-portal\"]/div/a")
     private WebElement newTaskButton;
 
@@ -67,6 +69,19 @@ public class IssuesPage {
 
     @FindBy(css = "div.firstColumn__d993")
     private WebElement mainInfoAboutTask;
+
+    // -------------------- Данные для теста по поиску существующей задачи --------------------
+    @FindBy(css = "input[data-test='ring-select__focus']")
+    private WebElement searchInput;
+
+    @FindBy(css = "table[data-test='ring-table']")
+    private WebElement resultsTableAfterSearch;
+    
+    @FindBy(css = "tbody tr[data-test^='ring-table-row']")
+    private List<WebElement> rows;
+    
+    @FindBy(css = "td[data-test='ring-table-cell summary']")
+    private List<WebElement> summaryCells;
 
     public IssuesPage(WebDriver driver) {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -131,6 +146,21 @@ public class IssuesPage {
             wait.until(ExpectedConditions.visibilityOf(mainInfoAboutTask));
 
             return true;
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
+
+    public boolean isTaskFinded(String searchQuery) {
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(searchInput))
+                .sendKeys(searchQuery + Keys.ENTER);
+            
+            wait.until(ExpectedConditions.visibilityOf(resultsTableAfterSearch));
+            
+            return summaryCells.stream()
+                               .anyMatch(cell -> cell.getText().contains(searchQuery));
+           
         } catch (TimeoutException e) {
             return false;
         }
