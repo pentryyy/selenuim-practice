@@ -20,6 +20,11 @@ public class DashboardPage {
                     "/div/div[2]/div/div/div[1]")
     private WebElement quickNotes;
 
+    @FindBy(xpath = "//*[@id=\"react-root\"]" +
+                    "/div/div/div[2]/main" +
+                    "/div/div/div[1]/div[1]/dialog/" +
+                    "div/div[2]/div/div/div[1]")
+    private WebElement issueList;
    
     public DashboardPage(WebDriver driver) {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -29,6 +34,15 @@ public class DashboardPage {
     public boolean isQuickNotesDisplayed() {
         try {
             wait.until(ExpectedConditions.visibilityOf(quickNotes));   
+            return true;
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
+
+    public boolean isIssueListDisplayed() {
+        try {
+            wait.until(ExpectedConditions.visibilityOf(issueList));   
             return true;
         } catch (TimeoutException e) {
             return false;

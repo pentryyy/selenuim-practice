@@ -40,7 +40,9 @@ public class DashboardTest {
     }
 
     @Test
-    void testShowingQuickNotes() {
+    void testUserInterfaceLoaded() {
+        Assertions.assertTrue(dashboardPage.isIssueListDisplayed(),
+                      "Список ошибок не отображаются");
         Assertions.assertTrue(dashboardPage.isQuickNotesDisplayed(),
                       "Заметки не отображаются");
     }
