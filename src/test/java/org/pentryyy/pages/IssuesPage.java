@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -16,6 +17,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class IssuesPage {
 
+    private WebDriver     driver;
     private WebDriverWait wait;
 
     // ----------------------------- Элемент интерфейса Черновики -----------------------------
@@ -77,14 +79,25 @@ public class IssuesPage {
     @FindBy(css = "table[data-test='ring-table']")
     private WebElement resultsTableAfterSearch;
     
-    @FindBy(css = "tbody tr[data-test^='ring-table-row']")
-    private List<WebElement> rows;
-    
     @FindBy(css = "td[data-test='ring-table-cell summary']")
     private List<WebElement> summaryCells;
 
+    // ------------------- Данные для теста по удалению существующей задачи -------------------
+    @FindBy(css = "tr[data-test^='ring-table-row']")
+    private List<WebElement> tableRows;
+
+    @FindBy(className = "ring-ui-input_c2c4")
+    WebElement checkbox;
+
+    @FindBy(css = "button[data-test='delete-item-button']")
+    WebElement deleteButton;
+
+    @FindBy(css = "button[data-test='confirm-ok-button']")
+    WebElement okButton;
+
     public IssuesPage(WebDriver driver) {
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.driver = driver;
+        this.wait   = new WebDriverWait(driver, Duration.ofSeconds(10));
         PageFactory.initElements(driver, this);
     }
 
@@ -161,6 +174,38 @@ public class IssuesPage {
             return summaryCells.stream()
                                .anyMatch(cell -> cell.getText().contains(searchQuery));
            
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
+
+    public boolean isTaskDeleted(String searchQuery) {
+        try {
+            if (searchQuery == null) {
+                return false;
+            }
+            
+            wait.until(ExpectedConditions.elementToBeClickable(searchInput))
+                .sendKeys(searchQuery + Keys.ENTER);
+            
+            wait.until(ExpectedConditions.visibilityOf(resultsTableAfterSearch));
+            
+            for (WebElement row : tableRows) {
+                if (row.getText().contains(searchQuery)) {
+
+                    ((JavascriptExecutor) driver).executeScript(
+                        "arguments[0].click();", checkbox
+                    );
+
+                    wait.until(ExpectedConditions.elementToBeClickable(deleteButton)).click();
+                    wait.until(ExpectedConditions.elementToBeClickable(okButton)).click();
+                    
+                    return true;
+                }
+            }
+
+            return false;
+
         } catch (TimeoutException e) {
             return false;
         }

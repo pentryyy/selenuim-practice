@@ -92,4 +92,21 @@ public class IssuesTest {
             throw e;
         }
     }
+
+    @Test
+    void testDeleteTask() {
+        try {
+
+            String searchQuery = System
+                .getProperty("search.query", null);
+
+            Assertions.assertTrue(issuesPage.isTaskDeleted(searchQuery),
+                          "Существующая задача не удалена");
+            
+            shouldTakeScreenshot.set(false);
+        } catch (Throwable e) {
+            shouldTakeScreenshot.set(true);
+            throw e;
+        }
+    }
 }
