@@ -95,6 +95,9 @@ public class IssuesPage {
     @FindBy(css = "button[data-test='confirm-ok-button']")
     WebElement okButton;
 
+    @FindBy(xpath = "//h1[contains(text(),'По вашему запросу не найдено ни одной задачи')]")
+    WebElement notFoundTasksMessage;
+
     public IssuesPage(WebDriver driver) {
         this.driver = driver;
         this.wait   = new WebDriverWait(driver, Duration.ofSeconds(10));
@@ -199,7 +202,8 @@ public class IssuesPage {
 
                     wait.until(ExpectedConditions.elementToBeClickable(deleteButton)).click();
                     wait.until(ExpectedConditions.elementToBeClickable(okButton)).click();
-                    
+                    wait.until(ExpectedConditions.visibilityOf(notFoundTasksMessage));
+
                     return true;
                 }
             }
