@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.openqa.selenium.WebDriver;
 
-public class IssuesTest {
+public class IssuesTestManual {
 
     private WebDriver  driver;
     private LoginPage  loginPage;
@@ -40,34 +40,31 @@ public class IssuesTest {
     }
 
     @Test
-    void testUserInterfaceLoaded() {
+    void testFindTask() {
         try {
 
-            Assertions.assertTrue(issuesPage.isDraftListDisplayed(),
-                          "Список черновиков не отображается");
+            String searchQuery = System
+                .getProperty("search.query", null);
 
-            Assertions.assertTrue(issuesPage.isProjectListDisplayed(),
-                          "Список проектов не отображается");
-
-            Assertions.assertTrue(issuesPage.isTagListDisplayed(),
-                          "Список тегов не отображается");
-
-            Assertions.assertTrue(issuesPage.isSavedSearchListDisplayed(),
-                          "Список сохраненных поисков не отображается");
-                
+            Assertions.assertTrue(issuesPage.isTaskFinded(searchQuery),
+                          "Существующая задача не найдена");
+            
             shouldTakeScreenshot.set(false);
         } catch (Throwable e) {
             shouldTakeScreenshot.set(true);
             throw e;
         }
     }
-    
+
     @Test
-    void testAddNewTask() {
+    void testDeleteTask() {
         try {
 
-            Assertions.assertTrue(issuesPage.isNewTaskAdded(null),
-                          "Новая задача не добавлена");
+            String searchQuery = System
+                .getProperty("search.query", null);
+
+            Assertions.assertTrue(issuesPage.isTaskDeleted(searchQuery),
+                          "Существующая задача не удалена");
             
             shouldTakeScreenshot.set(false);
         } catch (Throwable e) {

@@ -144,15 +144,17 @@ public class IssuesPage {
         }
     }
 
-    public boolean isNewTaskAdded() {
+    public boolean isNewTaskAdded(String heading) {
         try {
             wait.until(ExpectedConditions.elementToBeClickable(newTaskButton)).click();
             
             String timestamp = LocalDateTime
                 .now()
-                .format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));   
+                .format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+            
+            if (heading == null)
+                heading = "Тестовый заголовок " + timestamp; 
 
-            String heading     = "Тестовый заголовок " + timestamp; 
             String description = "Тестовое описание "  + timestamp;     
 
             wait.until(ExpectedConditions.elementToBeClickable(textarea)).sendKeys(heading);
@@ -169,6 +171,10 @@ public class IssuesPage {
 
     public boolean isTaskFinded(String searchQuery) {
         try {
+            if (searchQuery == null) {
+                return false;
+            }
+
             wait.until(ExpectedConditions.elementToBeClickable(searchInput))
                 .sendKeys(searchQuery + Keys.ENTER);
             
