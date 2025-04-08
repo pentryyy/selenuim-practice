@@ -44,9 +44,24 @@ public class AgilesPage {
 
             Thread.sleep(10000);
 
-            WebElement dropdown = driver.findElement(By.className("yt-agile-board__create-button_new button_f3d2 button_f3d2 heightS_c114 primary_e13e buttonWithoutIcon_b3e8"));
-            Select select = new Select(dropdown);
-            select.selectByVisibleText("Свимлэйн...");
+            WebElement dropdown = driver.findElement(By.xpath(
+                "//button[@class='yt-agile-board__create-button_new button_f3d2 button_f3d2 heightS_c114 primary_e13e buttonWithoutIcon_b3e8']"
+            ));
+            dropdown.click();
+
+            Thread.sleep(10000);
+            WebElement swimlane = driver.findElement(By.xpath(
+                "//button[@id=\"list-item-0-jcn4\"]"
+            ));      
+            
+            // swimlane.click();      
+
+            ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].click();", swimlane
+            );
+
+            // Select select = new Select(dropdown);
+            // select.selectByVisibleText("Свимлэйн...");
 
 
             // yt-agile-board__create-button_new button_f3d2 button_f3d2 heightS_c114 primary_e13e buttonWithoutIcon_b3e8
