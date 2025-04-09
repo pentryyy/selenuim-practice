@@ -78,7 +78,7 @@ public class IssuesTest {
 
     /* 
     Предполагается, что на странице уже содержится какие либо записи.
-    Этот тест ищет состояние - "Завершенная".
+    Этот тест ищет состояние - "Завершенная (Готово)".
     Проверяется соответствие фильра текущему резульатту.
     */
     @Test
@@ -86,7 +86,26 @@ public class IssuesTest {
         try {
 
             Assertions.assertTrue(issuesPage.isConditionTaskFiltered(),
-                          "Задачи не отфильтрованы");
+                          "Фильтр задач не корректно работает для состояния");
+            
+            shouldTakeScreenshot.set(false);
+        } catch (Throwable e) {
+            shouldTakeScreenshot.set(true);
+            throw e;
+        }
+    }
+
+    /* 
+    Предполагается, что на странице уже содержится какие либо записи.
+    Этот тест ищет проект - "K1dDoymwre (id K1D-*)".
+    Проверяется соответствие фильра текущему резульатту.
+    */
+    @Test
+    void testProjectTaskFilter() {
+        try {
+
+            Assertions.assertTrue(issuesPage.isProjectTaskFiltered(),
+                          "Фильтр задач не корректно работает для ролекта");
             
             shouldTakeScreenshot.set(false);
         } catch (Throwable e) {

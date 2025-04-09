@@ -107,14 +107,14 @@ public class IssuesPage {
                     "ring-ui-withNormalIcon_cefa']")
     private WebElement filterButton;
 
+    @FindBy(xpath = "//span[@data-test='ring-list-item-label']")
+    private WebElement filterStatus;
+
     @FindBy(xpath = "//span[@title='Состояние']")
     private WebElement conditionFilter;
 
-    @FindBy(xpath = "//span[@data-test='ring-list-item-label']")
-    private WebElement conditionStatus; 
-
-    @FindBy(xpath = "//tbody[@data-test='ring-table-body']/tr")
-    List<WebElement> rowsOfConditionFilter;
+    @FindBy(xpath = "//span[@title='Проект']")
+    private WebElement projectFilter;
 
     public IssuesPage(WebDriver driver) {
         this.driver = driver;
@@ -243,18 +243,37 @@ public class IssuesPage {
 
         wait.until(ExpectedConditions.elementToBeClickable(filterButton)).click();
         wait.until(ExpectedConditions.elementToBeClickable(conditionFilter)).click();
-        wait.until(ExpectedConditions.elementToBeClickable(conditionStatus)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(filterStatus)).click();
 
-        wait.until(list -> !rowsOfConditionFilter.isEmpty());
+        List<WebElement> rowsOfFilter = driver.findElements(By.xpath(
+            "//tbody[@data-test='ring-table-body']" +
+            "//span[contains(@class, 'resolved__c7d5')]"
+        ));
 
-        WebElement firstRowStateOfConditionFilter = rowsOfConditionFilter
-            .get(0).findElement(By.xpath(
-                ".//td[@data-test='ring-table-cell state']" +
-                "//span[contains(@class, 'resolved__c7d5')]")
-            );
+        if (rowsOfFilter.size() == 0)
+            return false;
+        
+        return rowsOfFilter.get(0)
+                           .getText()
+                           .contains("Готово");
+    }
 
-        return firstRowStateOfConditionFilter.getText()
-                                             .trim()
-                                             .equalsIgnoreCase("Готово");
+    public boolean isProjectTaskFiltered() {
+
+        wait.until(ExpectedConditions.elementToBeClickable(filterButton)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(projectFilter)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(filterStatus)).click();
+
+        List<WebElement> rowsOfFilter = driver.findElements(By.xpath(
+            "//tbody[@data-test='ring-table-body']" +
+            "//a[contains(@class, 'itemId__a877')]"
+        ));
+
+        if (rowsOfFilter.size() == 0)
+            return false;
+
+        return rowsOfFilter.get(0)
+                           .getText()
+                           .contains("K1D");
     }
 }
