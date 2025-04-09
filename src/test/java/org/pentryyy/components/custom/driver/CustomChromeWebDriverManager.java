@@ -5,6 +5,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
+import java.time.Duration;
+
 public class CustomChromeWebDriverManager extends CustomWebDriverManager {
     
     public static WebDriver getDriver(String url) {
@@ -14,6 +16,10 @@ public class CustomChromeWebDriverManager extends CustomWebDriverManager {
 
             WebDriver instance = new ChromeDriver();
             instance.manage().window();
+            instance.manage().timeouts()
+                    .pageLoadTimeout(Duration.ofSeconds(20))
+                    .implicitlyWait(Duration.ofSeconds(30))
+                    .scriptTimeout(Duration.ofSeconds(10));
             instance.get(url);
             
             driver.set(instance);

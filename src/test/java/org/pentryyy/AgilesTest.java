@@ -5,7 +5,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.pentryyy.components.custom.driver.CustomChromeWebDriverManager;
 import org.pentryyy.components.ScreenshotUtils;
 import org.pentryyy.pages.AgilesPage;
-import org.pentryyy.pages.IssuesPage;
 import org.pentryyy.pages.LoginPage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
