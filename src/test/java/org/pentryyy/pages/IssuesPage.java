@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
@@ -97,6 +98,23 @@ public class IssuesPage {
 
     @FindBy(xpath = "//h1[contains(text(),'По вашему запросу не найдено ни одной задачи')]")
     WebElement notFoundTasksMessage;
+
+    // -------------------- Данные для теста фильра существующх задач -------------------------
+    @FindBy(xpath = "//button[@class = '" +
+                    "ring-ui-button_bc66 addButton__c4f8 " + 
+                    "ring-ui-heightS_de02 " +
+                    "ring-ui-withIcon_b32b " +
+                    "ring-ui-withNormalIcon_cefa']")
+    private WebElement filterButton;
+
+    @FindBy(xpath = "//span[@title='Состояние']")
+    private WebElement conditionFilter;
+
+    @FindBy(xpath = "//span[@data-test='ring-list-item-label']")
+    private WebElement conditionStatus; 
+
+    @FindBy(xpath = "//tbody[@data-test='ring-table-body']/tr")
+    List<WebElement> rowsOfConditionFilter;
 
     public IssuesPage(WebDriver driver) {
         this.driver = driver;
@@ -219,5 +237,24 @@ public class IssuesPage {
         } catch (TimeoutException e) {
             return false;
         }
+    }
+
+    public boolean isConditionTaskFiltered() {
+
+        wait.until(ExpectedConditions.elementToBeClickable(filterButton)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(conditionFilter)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(conditionStatus)).click();
+
+        wait.until(list -> !rowsOfConditionFilter.isEmpty());
+
+        WebElement firstRowStateOfConditionFilter = rowsOfConditionFilter
+            .get(0).findElement(By.xpath(
+                ".//td[@data-test='ring-table-cell state']" +
+                "//span[contains(@class, 'resolved__c7d5')]")
+            );
+
+        return firstRowStateOfConditionFilter.getText()
+                                             .trim()
+                                             .equalsIgnoreCase("Готово");
     }
 }

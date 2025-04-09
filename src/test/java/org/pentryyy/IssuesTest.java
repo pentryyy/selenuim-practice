@@ -75,4 +75,23 @@ public class IssuesTest {
             throw e;
         }
     }
+
+    /* 
+    Предполагается, что на странице уже содержится какие либо записи.
+    Этот тест ищет состояние - "Завершенная".
+    Проверяется соответствие фильра текущему резульатту.
+    */
+    @Test
+    void testConditionTaskFilter() {
+        try {
+
+            Assertions.assertTrue(issuesPage.isConditionTaskFiltered(),
+                          "Задачи не отфильтрованы");
+            
+            shouldTakeScreenshot.set(false);
+        } catch (Throwable e) {
+            shouldTakeScreenshot.set(true);
+            throw e;
+        }
+    }
 }
