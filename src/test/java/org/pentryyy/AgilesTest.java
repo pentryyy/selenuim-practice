@@ -40,11 +40,25 @@ public class AgilesTest {
     }
     
     @Test
-    void testAddNewAgilesCard() {
+    void testAddNewSwimlaneCard() {
         try {
 
-            Assertions.assertTrue(agilesPage.isNewAgilesCardAdded(),
-                          "Новая карточка не добавлена");
+            Assertions.assertTrue(agilesPage.isNewSwimlaneCardAdded(),
+                          "Новая карточка для свимлейна не добавлена");
+            
+            shouldTakeScreenshot.set(false);
+        } catch (Throwable e) {
+            shouldTakeScreenshot.set(true);
+            throw e;
+        }
+    }
+
+    @Test
+    void testAddNewSprintCard() {
+        try {
+
+            Assertions.assertTrue(agilesPage.isNewSprintCardAdded(),
+                          "Новая карточка для спринта не добавлена");
             
             shouldTakeScreenshot.set(false);
         } catch (Throwable e) {

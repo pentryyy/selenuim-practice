@@ -31,17 +31,30 @@ public class AgilesPage {
     List<WebElement> buttons;
 
     @FindBy(xpath = "//textarea[@data-test='summary']")
-    private WebElement textarea;
+    private WebElement swimlaneHeader;
 
     @FindBy(xpath = "//div[@data-test='wysiwyg-editor-content']")
-    private WebElement editor;
+    private WebElement swimlaneDescription;
 
     @FindBy(xpath = "//button[@class = '" +
                     "ring-ui-button_bc66 " +
                     "ring-ui-heightS_de02 " +
                     "ring-ui-primary_ea44']")
-    private WebElement submitButton;
-   
+    private WebElement swimlaneButton;
+
+    @FindBy(xpath = "//input[@id = 'boardName']")
+    private WebElement sprintName;
+
+    @FindBy(xpath = "//textarea[@class='" +
+                    "ring-input " +
+                    "ng-pristine " +
+                    "ng-untouched " +
+                    "ng-valid ng-empty']")
+    private WebElement sprintTarget;
+
+    @FindBy(xpath = "//button[.//ng-transclude[normalize-space()='Создать спринт']]")
+    private WebElement sprintButton;
+
     /*
     Поиск элементов выпадающего списка 
     Свимлейн[0]
@@ -65,7 +78,7 @@ public class AgilesPage {
         PageFactory.initElements(driver, this);    
     }
 
-    public boolean isNewAgilesCardAdded() {
+    public boolean isNewSwimlaneCardAdded() {
         String timestamp = LocalDateTime
             .now()
             .format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
@@ -82,13 +95,46 @@ public class AgilesPage {
             firstButton.click();
 
             Thread.sleep(1000);
-            wait.until(ExpectedConditions.elementToBeClickable(textarea)).sendKeys(heading);
-            wait.until(ExpectedConditions.elementToBeClickable(editor)).sendKeys(description);
-            wait.until(ExpectedConditions.elementToBeClickable(submitButton)).click();
+            wait.until(ExpectedConditions.elementToBeClickable(swimlaneHeader)).sendKeys(heading);
+            wait.until(ExpectedConditions.elementToBeClickable(swimlaneDescription)).sendKeys(description);
+            wait.until(ExpectedConditions.elementToBeClickable(swimlaneButton)).click();
 
             driver.findElement(By.xpath(
                 "//span[@data-test='yt-agile-board-swimlane__summary' " +
                 "and text()='" + heading + "']"
+            ));
+
+            return true;
+
+        } catch (InterruptedException e) {
+            return false;
+        }
+    }
+
+    public boolean isNewSprintCardAdded() {
+        String timestamp = LocalDateTime
+            .now()
+            .format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+
+        String heading     = "Тестовый заголовок " + timestamp; 
+        String description = "Тестовое описание "  + timestamp;
+
+        wait.until(ExpectedConditions.elementToBeClickable(dropdown)).click();
+        
+        WebElement secondButton = findElementByDropdownId(1);
+        
+        try {
+            Thread.sleep(500);
+            secondButton.click();
+
+            Thread.sleep(1000);
+            wait.until(ExpectedConditions.elementToBeClickable(sprintName)).sendKeys(heading);
+            wait.until(ExpectedConditions.elementToBeClickable(sprintTarget)).sendKeys(description);
+            wait.until(ExpectedConditions.elementToBeClickable(sprintButton)).click();
+            
+            driver.findElement(By.xpath(
+                ".//div[contains(@class, 'yt-agile-board__toolbar__sprint__select__text') " + 
+                "and normalize-space()='" + heading + "']"
             ));
 
             return true;
