@@ -40,10 +40,10 @@ public class AgilesTest {
     }
     
     @Test
-    void testAddNewCard() {
+    void testAddNewAgilesCard() {
         try {
 
-            Assertions.assertTrue(agilesPage.isNewCardAdded(),
+            Assertions.assertTrue(agilesPage.isNewAgilesCardAdded(),
                           "Новая карточка не добавлена");
             
             shouldTakeScreenshot.set(false);
